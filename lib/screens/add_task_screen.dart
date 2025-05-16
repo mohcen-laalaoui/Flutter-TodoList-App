@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todoy_flutter/models/task_data.dart';
+import 'package:todoy_flutter/models/task.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -43,7 +44,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       return;
     }
 
-    // Add task with priority and due date
     Provider.of<TaskData>(context, listen: false).addTask(
       taskTitle,
       priority: _priority,
@@ -231,6 +231,3 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return '${date.day}/${date.month}/${date.year}';
   }
 }
-
-// Add this enum to your model file
-enum Priority { low, medium, high }

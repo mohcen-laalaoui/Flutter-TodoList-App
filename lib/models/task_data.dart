@@ -33,15 +33,11 @@ class TaskData extends ChangeNotifier {
     // Create a copy of the tasks list that we can sort
     final tasksCopy = List<Task>.from(_tasks);
 
-    // Apply sorting based on preferences
     if (_sortByPriority && _sortByDueDate) {
-      // Sort by importance (combines priority and due date)
       tasksCopy.sort((a, b) => b.importance.compareTo(a.importance));
     } else if (_sortByPriority) {
-      // Sort by priority only
       tasksCopy.sort((a, b) => b.priority.index.compareTo(a.priority.index));
     } else if (_sortByDueDate) {
-      // Sort by due date only, with null dates at the end
       tasksCopy.sort((a, b) {
         if (a.dueDate == null && b.dueDate == null) return 0;
         if (a.dueDate == null) return 1;
@@ -50,7 +46,6 @@ class TaskData extends ChangeNotifier {
       });
     }
 
-    // Filter completed tasks if needed
     final filteredTasks = _hideCompleted
         ? tasksCopy.where((task) => !task.isDone).toList()
         : tasksCopy;
@@ -58,16 +53,13 @@ class TaskData extends ChangeNotifier {
     return UnmodifiableListView(filteredTasks);
   }
 
-  // Basic task counters
   int get taskCount => _tasks.length;
   int get completedTaskCount => _tasks.where((task) => task.isDone).length;
   int get pendingTaskCount => _tasks.where((task) => !task.isDone).length;
 
-  // Overdue tasks getter
   List<Task> get overdueTasks =>
       _tasks.where((task) => task.isOverdue).toList();
 
-  // Due today tasks getter
   List<Task> get todayTasks {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -80,12 +72,10 @@ class TaskData extends ChangeNotifier {
     }).toList();
   }
 
-  // Sort and filter preference getters
   bool get sortByPriority => _sortByPriority;
   bool get sortByDueDate => _sortByDueDate;
   bool get hideCompleted => _hideCompleted;
 
-  // Sort and filter preference setters
   void setSortByPriority(bool value) {
     _sortByPriority = value;
     notifyListeners();
@@ -101,7 +91,6 @@ class TaskData extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Add a new task with enhanced properties
   void addTask(String taskTitle,
       {Priority priority = Priority.medium, DateTime? dueDate, String? notes}) {
     if (taskTitle.trim().isEmpty) return;
@@ -117,13 +106,11 @@ class TaskData extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Update existing task completion status (preserving backward compatibility)
   void updateTask(Task task) {
     task.toggleDone();
     notifyListeners();
   }
 
-  // Update a task with new values
   void updateTaskDetails(
     Task oldTask, {
     String? name,
@@ -157,7 +144,6 @@ class TaskData extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Group tasks by due date status (Today, Tomorrow, This Week, etc)
   Map<String, List<Task>> get tasksByDueStatus {
     final Map<String, List<Task>> grouped = {
       'Overdue': [],
